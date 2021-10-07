@@ -7,7 +7,6 @@ pygame.init()
 pygame.mixer.init(frequency=44100, size=-16, channels=2, buffer=4096)
 
 #Váriaveis do Jogo
-NomeJogo_ = "PrismBaby - Alpha v1.0"
 sexo_Escolhido = "indefinido"
 comida_selecionada = "vazio"
 bebida_selecionada = "vazio"
@@ -17,6 +16,7 @@ box_necessidades_sede_anim = 0
 box_necessidades_comida_anim = 0
 lavar = 3
 x = 0
+anim_maos = 0
 flag_menu_config_aberto = False
 cookie = True
 burger = True
@@ -35,7 +35,6 @@ bebida_full = False
 
 #Atributos de Cenas
 #Menu Principal
-Background_cena0            =               (0,0,800,600)
 Painel_                     =               (25,100,300,400)
 Painel_Jogar                =               (30,225,290,200)
 Painel_Creditos             =               (40,380,120,120)
@@ -50,7 +49,6 @@ nome                        =               (30,100,550,200)
 nome2                       =               (20,300,550,200)
 
 #Tela de Seleção
-Background_cena1            =               (0,0,800,600)
 btn_SelecaoMasculino        =               (150,170,150,200)
 btn_SelecaoFeminino         =               (500,170,150,200)
 ico_SexoIndefinido          =               (350,220,100,100)
@@ -58,7 +56,6 @@ ico_SexoMasculino           =               (350,220,100,100)
 ico_SexoFeminino            =               (350,220,100,100)
 
 #Cozinha
-Background_cena2            =               (0,0,800,600)
 prato                       =               (200,400,400,200)
 bebida                      =               (630,300,90,250)
 porta_masculina             =               (540,95,100,250)
@@ -79,13 +76,11 @@ comida_position             =               (220,370,350,200)
 bebida_position             =               (630,300,90,250)
 setaH                       =               (440,140,100,100)
 setaM                       =               (590,140,100,100)
-
-box_necessidades = (0,350,120,250)
-box_necessidades_comida = (20,370,90,90)
-box_necessidades_sede = (10,470,100,100)
+box_necessidades            =               (0,350,120,250)
+box_necessidades_comida     =               (20,370,90,90)
+box_necessidades_sede       =               (10,470,100,100)
 
 #Banheiro
-Background_cena3            =               (0,0,800,600)
 pia                         =               (15,280,200,200)
 privada                     =               (500,350,200,200)
 porta_banheiro              =               (280,185,160,300)
@@ -120,6 +115,7 @@ def resetar():
     global comida_selecionada
     global comida_full
     global x
+    global anim_maos
     global cookie
     global burger
     global bebida_anim
@@ -139,6 +135,7 @@ def resetar():
     global switch
 
     x = 0
+    anim_maos = 0
     comida_anim = 0
     box_necessidades_comida_anim = 0
     bebida_anim = 0
@@ -187,8 +184,8 @@ def Exibir_background(nome): #800x600
     screen.blit(image,(0,0))
 
 anim_passaro = 0
-passaro_x   =   random.randint(-10,600)
-passaro_y   =   random.randint(0,200)
+passaro_x = random.randint(-10,600)
+passaro_y = random.randint(0,200)
 passaro_sprite = []
 for i in range(7):
     passaro_sprite.append(pygame.image.load(os.path.join("images//passaros",'frame_' + str(i) + '_delay-0.08s.png')))
@@ -198,21 +195,20 @@ def anima_passaro():
     global passaro_x
     global passaro_y
 
-    passaro_y = passaro_y - 1
+    passaro_y -= 1
     if(passaro_y >= 600):
         passaro_y = random.randint(0,200)
         anim_passaro = 0
     anim_passaro += 1
     if (anim_passaro >= 7):
         anim_passaro = 0
-
-    passaro_x = passaro_x + 5
+    passaro_x += 5
     if(passaro_x >= 800):
         passaro_x = random.randint(-10,0)
         passaro_y = random.randint(0, 200)
 
-    index = pygame.transform.scale(passaro_sprite[anim_passaro], (200, 200))
-    screen.blit(index, (passaro_x, passaro_y))
+    index = pygame.transform.scale(passaro_sprite[anim_passaro],(200,200))
+    screen.blit(index,(passaro_x, passaro_y))
 
 
 def Exibir(cena):
@@ -220,7 +216,6 @@ def Exibir(cena):
     global flag_menu_config_aberto
     #Atualizando Cenário
     if(cena == 0):
-        screen.fill((255,255,255))
         Exibir_background('background_menu800x600_novo.jpg')
         anima_passaro()
 
@@ -236,11 +231,10 @@ def Exibir(cena):
         screen.blit(pygame.font.SysFont("Arial bold",22).render("Desenvolvido por Monzeu Corporation - Versão Alpha 1.0",True,(255,255,255)),[10,5])
         
     elif(cena == 1):
-        screen.fill((255,255,255))
         Exibir_background('background_selecao_sexo800x600.jpeg')
         Exibir_Imagem(Btn_Voltar,'btn_voltar.png')
-        Exibir_Imagem(btn_SelecaoMasculino,'escolha_masculino.png')
-        Exibir_Imagem(btn_SelecaoFeminino,'escolha_feminino.png')
+        Exibir_Imagem(btn_SelecaoMasculino,'escolha_masculino.jpeg')
+        Exibir_Imagem(btn_SelecaoFeminino,'escolha_feminino.jpeg')
         
         if(sexo_Escolhido == "indefinido"):
             Exibir_Imagem(ico_SexoIndefinido,'simbolo_indefinido.png')
@@ -248,7 +242,6 @@ def Exibir(cena):
             Exibir_Imagem(ico_SexoMasculino,'simbolo_masculino.png')
         elif(sexo_Escolhido == "feminino"):
             Exibir_Imagem(ico_SexoFeminino,'simbolo_feminino.png')
-
 
     elif(cena == 2):
         Exibir_background('background_cozinha800x600.jpg')
@@ -337,6 +330,8 @@ def Exibir(cena):
         Exibir_Imagem(espelho,'espelho.png')
         Exibir_Imagem(saboneteira,'saboneteira.png')
 
+        
+        
         if(secar == True):
             Exibir_Imagem(toalha,'toalha2.png')
         else:
@@ -352,6 +347,8 @@ def Exibir(cena):
         else:
             Exibir_Imagem(sabao,'sabao.png')
 
+        Mouse_x, Mouse_y = pygame.mouse.get_pos()
+        Exibir_Imagem((Mouse_x-150,Mouse_y-150,300,300),'anim_maos/maos_' + str(anim_maos) + '.png')
 
         if(flag_menu_config_aberto == True):
             Exibir_Imagem(box_menu_config_aberto,'box_menu_config_aberto.png')
@@ -368,6 +365,7 @@ def Exibir(cena):
         Exibir_background('background_banheiro2.jpg')
         Exibir_Imagem(btnMenu_Config,'btn_Menu_Opcoes.png')
         Exibir_Imagem(Btn_Voltar,'btn_voltar.png')
+
         
         if(tampa == True):
             Exibir_Imagem(vaso_aberto,'privada.png')
@@ -411,7 +409,6 @@ def Exibir(cena):
                 Exibir_Imagem(box_menu_ComSom,'icone_comSom.png')
 
     elif(cena == 6):
-        screen.fill((255,255,255))
         Exibir_background('background_menu800x600_novo.jpg')
         Exibir_Imagem(Vitoria,'vitoria.png')
         Exibir_Imagem(creditos2,'btn_menu_creditos.png')
@@ -419,7 +416,6 @@ def Exibir(cena):
         anima_passaro()
 
     elif(cena == 7):
-        screen.fill((255,255,255))
         Exibir_background('background_menu800x600_novo.jpg')
         Exibir_Imagem(Btn_Voltar,'btn_voltar.png')
         Exibir_Imagem(nome,'creditos.png')
@@ -460,9 +456,22 @@ def Acoes(cena):
     global bebida_full
     global box_necessidades_sede_anim
     global box_necessidades_comida_anim
+    global anim_maos
     
     for event in pygame.event.get():
-       if event.type == 5:
+
+       if event.type == pygame.MOUSEMOTION:
+           if(cena == 4):
+                #Definindo Colisao 
+                btn_agua = pygame.Rect(torneira_ligada)
+                
+                if(torneira == True):
+                  if btn_agua.collidepoint(event.pos):
+                    if(anim_maos > 0):
+                        anim_maos -= 1
+                        log("Limpando Mãos")
+                        
+       elif event.type == pygame.MOUSEBUTTONDOWN:
            ##Cena 0
             if(cena == 0):
                 #Definindo Colisao
@@ -475,8 +484,8 @@ def Acoes(cena):
                 
                 #Definindo Ações
                 if btnJogarColisao.collidepoint(event.pos):
-                    log(f"Clicando em Jogar")
-                    log(f"Indo para tela de seleção")
+                    log("Clicando em Jogar")
+                    log("Indo para tela de seleção")
                     sexo_Escolhido = "indefinido"
                     som_clique.play()
                     return cena+1
@@ -699,7 +708,8 @@ def Acoes(cena):
 
                 if(flag_menu_config_aberto == False):
                     if portaBanheiroColisao.collidepoint(event.pos):
-                        if(lavar == 3):
+                        
+                        if(lavar >= 3):
                             som_clique.play()
                             bolha,torneira,secar = False,False,False
                             log("Voltando para cozinha")
@@ -756,9 +766,11 @@ def Acoes(cena):
                 toalhaColisao = pygame.Rect(toalha)
                 espelhoColisao = pygame.Rect(espelho)
                 sabaoColisao = pygame.Rect(sabao)
-
+                
+            
                 if(flag_menu_config_aberto == False):
                     if btnVoltarColisao.collidepoint(event.pos):
+                        bolha,torneira,secar = False,False,False
                         som_torneira.stop()
                         som_sabao.stop()
                         som_toalha.stop()
@@ -773,7 +785,6 @@ def Acoes(cena):
                             log("Abriu a torneira")
                     else:
                         if torneiraLigadaColisao.collidepoint(event.pos):
-                            lavar,bolha,torneira,secar = 0,False,False,False
                             som_torneira.stop()
                             torneira = False
                             log("Fechou a torneira")
@@ -784,11 +795,12 @@ def Acoes(cena):
                             lavar += 1
                             log("Ensaboou as mãos")
                             bolha = True
+                            anim_maos = 4
 
                     if secar == False:
                         if toalhaColisao.collidepoint(event.pos):
                             som_toalha.play()
-                            lavar += 1
+                            lavar = lavar + 1
                             log("Secou as mãos")
                             secar = True
                            
@@ -962,7 +974,7 @@ def Acoes(cena):
     return cena
 
 screen = pygame.display.set_mode((800,600))
-pygame.display.set_caption(NomeJogo_)
+pygame.display.set_caption("PrismBaby - Alpha v1.0")
 running = True
 flag_cena_song = True
 atual = 0
@@ -977,9 +989,9 @@ while running:
         pygame.mixer.pause()
     else:
         pygame.mixer.unpause()
-        
-    screen.fill((0,0,0))
+
     Exibir(atual)
     atual = Acoes(atual)
     pygame.display.update()
     pygame.display.flip()
+
